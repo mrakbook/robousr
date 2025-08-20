@@ -1,0 +1,25 @@
+# Systemd unit for the local llama-cpp model server
+# Copy to /etc/systemd/system/robousr-llama.service and edit paths/user.
+[Unit]
+Description=RoboUsr LLaMA (llama-cpp) Model Server
+After=network.target
+
+[Service]
+Type=simple
+User=yourusername
+Group=yourusername
+WorkingDirectory=/home/yourusername/robousr
+# If you want to manage model path and threads via .env, uncomment the next line:
+# EnvironmentFile=/home/yourusername/robousr/.env
+ExecStart=/home/yourusername/robousr/venv/bin/python -m llama_cpp.server \
+  --model /home/yourusername/robousr/models/model-q4_K.gguf \
+  --model_alias saiga-llama3-8b \
+  --chat_format=llama-3 \
+  --host 127.0.0.1 \
+  --port 8001 \
+  --n_threads 4
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
