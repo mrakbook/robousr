@@ -1,0 +1,22 @@
+# Systemd unit for the RoboUsr FastAPI + Telethon app
+# Copy to /etc/systemd/system/robousr.service and edit paths/user.
+[Unit]
+Description=RoboUsr Telegram AI Userbot
+After=network.target mariadb.service
+
+[Service]
+Type=simple
+User=yourusername
+Group=yourusername
+WorkingDirectory=/home/yourusername/robousr
+EnvironmentFile=/home/yourusername/robousr/.env
+Environment=PYTHONPATH=/home/yourusername/robousr/src
+ExecStart=/home/yourusername/robousr/venv/bin/uvicorn core.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+# (Optional) Set a reasonable open files limit if you expect lots of connections
+# LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
